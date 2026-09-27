@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For You ♡</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #fff7fa;
+            color: #3b3034;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* OPENING */
+        .screen {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: #fff7fa;
+            z-index: 100;
+            transition: 0.8s ease;
+            padding: 20px;
+        }
+
+        .screen.hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .gift {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: floating 2s infinite ease-in-out;
+            cursor: pointer;
+        }
+
+        .screen h1 {
+            font-size: 42px;
+            margin-bottom: 8px;
+            color: #4a343c;
+        }
+
+        .screen p {
+            color: #806f75;
+            margin-bottom: 25px;
+        }
+
+        /* BUTTON */
+        button {
+            border: none;
+            background: #3b3034;
+            color: white;
+            padding: 13px 28px;
+            border-radius: 30px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.25s ease;
+            box-shadow: 0 4px 15px rgba(80, 50, 60, 0.15);
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            opacity: 0.9;
+            box-shadow: 0 6px 20px rgba(80, 50, 60, 0.25);
+        }
+
+        /* MAIN */
+        #mainContent {
+            opacity: 0;
+            transition: 1s ease;
+        }
+
+        #mainContent.show {
+            opacity: 1;
+        }
+
+        /* SECTION */
+        .section {
+            min-height: 100vh;
+            max-width: 850px;
+            margin: auto;
+            padding: 90px 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .hero {
+            text-align: center;
+            align-items: center;
+        }
+
+        .hero h1 {
+            font-size: clamp(45px, 8vw, 80px);
+            line-height: 0.95;
+            margin: 15px 0 25px;
+            color: #3b3034;
+        }
+
+        .hero p {
+            max-width: 500px;
+            color: #806f75;
+        }
+
+        .small-text {
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-size: 12px;
+            color: #b58d98;
+            font-weight: 600;
+        }
+
+        /* POLAROID FRAME FOR HERO */
+        .polaroid-frame {
+            background: white;
+            padding: 15px 15px 35px 15px;
+            box-shadow: 0 12px 30px rgba(80, 50, 60, 0.12);
+            border-radius: 8px;
+            transform: rotate(-2deg);
+            transition: all 0.3s ease;
+            margin: 20px 0 30px;
+            max-width: 300px;
+        }
+
+        .polaroid-frame:hover {
+            transform: rotate(0deg) scale(1.03);
+            box-shadow: 0 18px 35px rgba(80, 50, 60, 0.18);
+        }
+
+        .polaroid-frame img {
+            width: 100%;
+            height: 270px;
+            object-fit: cover;
+            border-radius: 4px;
+            display: block;
+        }
+
+        .polaroid-frame .caption {
+            margin-top: 12px;
+            font-size: 15px;
+            color: #806f75;
+            font-style: italic;
+        }
+
+        /* HEADINGS */
+        h2 {
+            font-size: clamp(30px, 5vw, 50px);
+            line-height: 1.1;
+            margin: 10px 0 25px;
+            color: #3b3034;
+        }
+
+        .number {
+            color: #b58d98;
+            letter-spacing: 3px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* CARDS */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(80, 50, 60, 0.08);
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+        }
+
+        .card span {
+            font-size: 28px;
+        }
+
+        .card h3 {
+            margin: 15px 0 8px;
+        }
+
+        .card p {
+            font-size: 14px;
+            color: #806f75;
+        }
+
+        /* MEMORY */
+        .memory {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .memory-item {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(80, 50, 60, 0.07);
+        }
+
+        .memory-photo {
+            width: 90px;
+            height: 90px;
+            flex-shrink: 0;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .memory-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .memory-item h3 {
+            margin-bottom: 5px;
+        }
+
+        .memory-item p {
+            color: #806f75;
+            font-size: 14px;
+        }
+
+        /* CENTER */
+        .center {
+            text-align: center;
+            align-items: center;
+        }
+
+        #missMessage {
+            margin-top: 25px;
+            min-height: 30px;
+            font-weight: bold;
+            color: #b58d98;
+            font-size: 17px;
+        }
+
+        /* LETTER */
+        .letter {
+            align-items: center;
+        }
+
+        .letter-box {
+            background: white;
+            max-width: 650px;
+            padding: 35px;
+            border-radius: 25px;
+            box-shadow: 0 15px 40px rgba(80, 50, 60, 0.08);
+        }
+
+        .letter-box p {
+            margin-bottom: 18px;
+        }
+
+        .letter-box h3 {
+            margin-top: 25px;
+            font-size: 25px;
+        }
+
+        .signature {
+            text-align: right;
+            font-style: italic;
+            color: #806f75;
+        }
+
+        /* FINAL */
+        .final {
+            text-align: center;
+            align-items: center;
+            min-height: 80vh;
+        }
+
+        .big-heart {
+            font-size: 100px;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        .final h2 {
+            margin-top: 20px;
+        }
+
+        /* ANIMATIONS */
+        @keyframes floating {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+
+        @keyframes floatHeart {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-60px) scale(1.3); }
+        }
+
+        /* MOBILE RESPONSIVE */
+        @media (max-width: 700px) {
+            .section { padding: 70px 20px; }
+            .cards { grid-template-columns: 1fr; }
+            .memory-item { flex-direction: column; text-align: center; }
+            .memory-photo { width: 100%; height: 180px; }
+            .screen h1 { font-size: 35px; }
+            .letter-box { padding: 25px; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HALAMAN PEMBUKA -->
+    <section class="screen active" id="opening">
+        <div class="gift">🎁</div>
+        <h1>Haii Ntul</h1>
+        <p>Aku punya sesuatu buat kamu...</p>
+        <button onclick="openGift()">
+            Buka hadiah :> ♡
+        </button>
+    </section>
+
+
+    <!-- HALAMAN UTAMA -->
+    <main id="mainContent">
+
+        <!-- HERO -->
+        <section class="section hero">
+            <p class="small-text">27 September 2026</p>
+
+            <h1>
+                Happy<br>
+                Anniversary ♡
+            </h1>
+
+            <!-- POLAROID FOTO HERO -->
+            <div class="polaroid-frame">
+                <img src="FOTO-NTULDUA.jpg" alt="Foto Utama">
+                <div class="caption">Special Person ♡</div>
+            </div>
+
+            <p>
+                Aku mungkin nggak bisa kasih kamu hadiah
+                yang bisa dibungkus hari ini...
+            </p>
+            <p>
+                Jadi daa bikin sesuatu yang bisa kamu simpan yaa
+            </p>
+        </section>
+
+
+        <!-- PESAN -->
+        <section class="section">
+            <span class="number">01</span>
+            <h2>Kenapaa aku bikin ini?</h2>
+            <p>
+                Karnaa daaa mau buat sesuatu yang bener bener terbuat dari aku.
+            </p>
+            <p>
+                Mungkin sederhana🤔, tapii setiap bagian
+                dari web ini aku buat khusus buat naaa.
+            </p>
+        </section>
+
+
+        <!-- ALASAN -->
+        <section class="section">
+            <span class="number">02</span>
+            <h2>Little things I like about you</h2>
+
+            <div class="cards">
+                <div class="card">
+                    <span>🤍</span>
+                    <h3>Senyummu</h3>
+                    <p>
+                        Gatauu kenapa, kok bisa ya ntull senyumanmu bisa semanis itu?
+                    </p>
+                </div>
+
+                <div class="card">
+                    <span>☁</span>
+                    <h3>Cara kamu cerita</h3>
+                    <p>
+                        Bahkan kamu ceritaa ada sesuatu di rambut kamu aku pun tetep dengerin :>
+                    </p>
+                </div>
+
+                <div class="card">
+                    <span>✦</span>
+                    <h3>Perhatian kecilmu</h3>
+                    <p>
+                        Hal-hal kecil yang mungkin menurutmu
+                        biasa, tapii aku bakal tetep menghargainyaa.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- MEMORI DENGAN FOTO -->
+        <section class="section">
+            <span class="number">03</span>
+            <h2>Our little memories</h2>
+
+            <div class="memory">
+                <div class="memory-item">
+                    <div class="memory-photo">
+                        <img src="foto-genggam.jpg" alt="First Date">
+                    </div>
+                    <div>
+                        <h3>Our first date 🎬</h3>
+                        <p>
+                            Nonton bioskop, makann bareng, dan beberapa hal kecil yang membuat 
+                            aku tersenyum kala itu.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="memory-item">
+                    <div class="memory-photo">
+                        <img src="foto-chat.jpg" alt="Random Moments">
+                    </div>
+                    <div>
+                        <h3>Random moments ☕</h3>
+                        <p>
+                            Kadangg ngebahas ini kadang itu, sampe" hal kecil pun di bahas aowkaowk.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="memory-item">
+                    <div class="memory-photo">
+                        <img src="foto-ntul.jpg" alt="Us">
+                    </div>
+                    <div>
+                        <h3>Kamuu ♡</h3>
+                        <p>
+                            Dann masih banyak yangg belum tak ceritakan disini.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- TOMBOL KANGEN -->
+        <section class="section center">
+            <span class="number">04</span>
+            <h2>Kangenn aku gaa ntul😠</h2>
+            <p>Jangan boong ih</p>
+
+            <button onclick="missYou()">
+                Klik kalo kangen :>
+            </button>
+
+            <p id="missMessage"></p>
+        </section>
+
+
+        <!-- SURAT -->
+        <section class="section letter">
+            <span class="number">05</span>
+            <h2>A little letter for you 💌</h2>
+
+            <div class="letter-box">
+                <p>Happy anniversary, sayang.</p>
+                <p>Makasih yaa karena selama ini kamu udah jadi bagian dari hari hariku.</p>
+                <p>
+                    Daaa mungkin gaa selalu bisa jadi orang yang sempurna, kadang masih
+                    gengsi, kadang bikin kamu kesel juga. Tapi aku selalu menghargai keberadaan kamu.
+                </p>
+                <p>
+                    Semoga ke depannya kita masih bisa punya banyak cerita, banyak ketawa ketiwi,
+                    dan banyak momen yang bisa kita inget bareng-bareng...
+                </p>
+                <p>
+                    OIYA, maaf ya kalo sebenarnya bukan tanggal 27, tapi seinget daa tanggal segitu... hehe.
+                </p>
+                <p>Sekali lagi...</p>
+
+                <h3>Happy Anniversary My First Love 🤍</h3>
+
+                <p class="signature">— Huda Sayangnya Ntul</p>
+            </div>
+        </section>
+
+
+        <!-- PENUTUP -->
+        <section class="section final">
+            <div class="big-heart">♡</div>
+            <h2>
+                Thank you<br>
+                for being here.
+            </h2>
+            <p>See you in our next chapter.</p>
+        </section>
+
+    </main>
+
+    <script>
+        function openGift() {
+            const opening = document.getElementById("opening");
+            const mainContent = document.getElementById("mainContent");
+
+            opening.classList.add("hide");
+
+            setTimeout(function() {
+                mainContent.classList.add("show");
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth"
+                });
+            }, 500);
+        }
+
+        /* TOMBOL KANGEN */
+        function missYou() {
+            const message = document.getElementById("missMessage");
+
+            const messages = [
+                "SAYANGG BANGET MA KAMUU NTULL",
+                "Akuu juga kangen kokk",
+                "Senyumm dongg ndutt:>",
+                "Muahh muahh🤍",
+                "Kangenn yaa?? sini sini ututu🫂",
+                "Ketahuan dehh kalo kangen, hehee.",
+                "Daa simpan yaa rasa kangen kamu"
+            ];
+
+            const randomIndex = Math.floor(Math.random() * messages.length);
+            message.textContent = messages[randomIndex];
+        }
+
+        /* HEART EFFECT ON CLICK */
+        document.addEventListener("click", function(event) {
+            if (event.target.tagName === "BUTTON" || event.target.classList.contains("big-heart") || event.target.classList.contains("gift")) {
+                const heart = document.createElement("div");
+                heart.textContent = "♡";
+                heart.style.position = "fixed";
+                heart.style.left = (event.clientX - 10) + "px";
+                heart.style.top = (event.clientY - 10) + "px";
+                heart.style.fontSize = "25px";
+                heart.style.color = "#e28b9b";
+                heart.style.pointerEvents = "none";
+                heart.style.zIndex = "999";
+                heart.style.animation = "floatHeart 1s ease-out forwards";
+
+                document.body.appendChild(heart);
+
+                setTimeout(function() {
+                    heart.remove();
+                }, 1000);
+            }
+        });
+    </script>
+</body>
+</html>
